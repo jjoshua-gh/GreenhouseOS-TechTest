@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import PropertyCard from "./components/PropertyCard";
+import { Property, Offer } from "@/data/mock";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export default function HomePage() {
-  const [properties, setProperties] = useState<any>([]);
+  const [properties, setProperties] = useState<Property[]>([]);
   const [offerCounts, setOfferCounts] = useState<Record<string, number>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,14 +19,14 @@ export default function HomePage() {
         fetch(`${API_URL}/api/offers`)
       ]);
       
-      const [propertiesData, offersData] = await Promise.all([
+      const [propertiesData, offersData]: [Property[], Offer[]] = await Promise.all([
         propertiesRes.json(),
         offersRes.json()
       ]);
       
       // Calculate offer counts per property
       const counts: Record<string, number> = {};
-      offersData.forEach((offer: any) => {
+      offersData.forEach((offer: Offer) => {
         counts[offer.propertyId] = (counts[offer.propertyId] || 0) + 1;
       });
       
@@ -56,7 +57,7 @@ export default function HomePage() {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {properties.map((property: any) => (
+        {properties.map((property: Property) => (
           <PropertyCard 
             key={property.id} 
             property={property} 

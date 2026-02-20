@@ -134,3 +134,9 @@ Make sure nothing sensitive is committed to the repo.
 
 It did not add any API keys to the env variables, nor could it find any, so I am assuming there are none.
 It did add a local connection URL which makes sense so it can be swapped out in production
+
+3. This prompt:
+Please tighten the type declarations throughout this project and update the tsconfig with good standards to avoid things like using the 'any' type. Where applicable, define new types that accurately describe the structure of data passed
+
+All initial changes seem reasonable - removes usage of the 'any' type and declare strict types, new interface types or union types where only specific string values are allowed to be even stricter than the 'String' type. Changes make to
+ts.congif also seem reasonable.

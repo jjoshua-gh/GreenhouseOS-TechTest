@@ -1,6 +1,8 @@
+import { Property, PropertyStatus } from "@/data/mock";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-function PriceTag({ price }: { price: any }) {
+function PriceTag({ price }: { price: number }) {
   return (
     <p className="text-2xl font-bold text-green-700 mt-1">
       {price}
@@ -13,9 +15,9 @@ function PropertyInfo({
   price,
   listedDate,
 }: {
-  address: any;
-  price: any;
-  listedDate: any;
+  address: string;
+  price: number;
+  listedDate: string;
 }) {
   return (
     <div>
@@ -35,15 +37,15 @@ function PropertyCardContent({
   isLoadingOffers,
   propertyId,
 }: {
-  address: any;
-  price: any;
-  status: any;
-  listedDate: any;
-  offerCount: any;
-  isLoadingOffers: any;
-  propertyId: any;
+  address: string;
+  price: number;
+  status: PropertyStatus;
+  listedDate: string;
+  offerCount: number;
+  isLoadingOffers: boolean;
+  propertyId: string;
 }) {
-  const getStatusColor = (s: any) => {
+  const getStatusColor = (s: PropertyStatus): string => {
     if (s === "Available") return "bg-green-100 text-green-800";
     if (s === "Sale Agreed") return "bg-yellow-100 text-yellow-800";
     if (s === "Sold") return "bg-blue-100 text-blue-800";
@@ -80,7 +82,7 @@ export default function PropertyCard({
   property,
   offerCount,
 }: {
-  property: any;
+  property: Property;
   offerCount: number;
 }) {
   return (

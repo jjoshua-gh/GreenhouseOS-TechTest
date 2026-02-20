@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { properties, contacts, offers } from "@/data/mock";
+import { properties } from "@/data/mock";
 
 export async function GET() {
   // Return properties directly without enrichment

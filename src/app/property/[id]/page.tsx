@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Property, Offer, PropertyStatus, OfferStatus } from "@/data/mock";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-function PriceDisplay({ price }: { price: any }) {
+function PriceDisplay({ price }: { price: number }) {
   return (
     <p className="text-3xl font-bold text-green-700 mt-2">
       {price}
@@ -18,12 +19,12 @@ function PropertyHeader({
   status,
   listedDate,
 }: {
-  address: any;
-  price: any;
-  status: any;
-  listedDate: any;
+  address: string;
+  price: number;
+  status: PropertyStatus;
+  listedDate: string;
 }) {
-  const getStatusColor = (s: any) => {
+  const getStatusColor = (s: PropertyStatus): string => {
     if (s === "Available") return "bg-green-100 text-green-800";
     if (s === "Sale Agreed") return "bg-yellow-100 text-yellow-800";
     if (s === "Sold") return "bg-blue-100 text-blue-800";
@@ -52,10 +53,10 @@ function OfferRow({
   amount,
   status,
 }: {
-  amount: any;
-  status: any;
+  amount: number;
+  status: OfferStatus;
 }) {
-  const getStatusColor = (s: any) => {
+  const getStatusColor = (s: OfferStatus): string => {
     if (s === "Accepted") return "bg-green-100 text-green-800";
     if (s === "Rejected") return "bg-red-100 text-red-800";
     if (s === "Pending") return "bg-yellow-100 text-yellow-800";
@@ -77,12 +78,12 @@ function OfferRow({
 export default function PropertyDetailPage({
   params,
 }: {
-  params: any;
+  params: { id: string };
 }) {
-  const [property, setProperty] = useState<any>(null);
-  const [offers, setOffers] = useState<any>([]);
-  const [loadingProperty, setLoadingProperty] = useState(true);
-  const [loadingOffers, setLoadingOffers] = useState(true);
+  const [property, setProperty] = useState<Property | null>(null);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loadingProperty, setLoadingProperty] = useState<boolean>(true);
+  const [loadingOffers, setLoadingOffers] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +93,7 @@ export default function PropertyDetailPage({
         fetch(`${API_URL}/api/offers?propertyId=${params.id}`)
       ]);
       
-      const [propertyData, offersData] = await Promise.all([
+      const [propertyData, offersData]: [Property, Offer[]] = await Promise.all([
         propertyRes.json(),
         offersRes.json()
       ]);
@@ -106,7 +107,7 @@ export default function PropertyDetailPage({
     fetchData();
   }, [params.id]);
 
-  if (loadingProperty) {
+  if (loadingProperty || !property) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="text-center">
@@ -153,7 +154,7 @@ export default function PropertyDetailPage({
               </tr>
             </thead>
             <tbody>
-              {offers.map((offer: any) => (
+              {offers.map((offer: Offer) => (
                 <OfferRow
                   key={offer.id}
                   amount={offer.amount}

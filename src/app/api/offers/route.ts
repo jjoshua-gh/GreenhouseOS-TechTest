@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { offers } from "@/data/mock";
+import { offers, Offer } from "@/data/mock";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const propertyId = searchParams.get("propertyId");
 
   if (propertyId) {
-    const filtered = offers.filter((o: any) => o.propertyId === propertyId);
+    const filtered = offers.filter((o: Offer) => o.propertyId === propertyId);
     return NextResponse.json(filtered);
   }
 
