@@ -7,16 +7,33 @@ const API_URL = "http://localhost:3000";
 
 export default function HomePage() {
   const [properties, setProperties] = useState<any>([]);
+  const [offerCounts, setOfferCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProperties = async () => {
-      const res = await fetch(`${API_URL}/api/properties`);
-      const data = await res.json();
-      setProperties(data);
+    const fetchData = async () => {
+      // Fetch properties and offers in parallel
+      const [propertiesRes, offersRes] = await Promise.all([
+        fetch(`${API_URL}/api/properties`),
+        fetch(`${API_URL}/api/offers`)
+      ]);
+      
+      const [propertiesData, offersData] = await Promise.all([
+        propertiesRes.json(),
+        offersRes.json()
+      ]);
+      
+      // Calculate offer counts per property
+      const counts: Record<string, number> = {};
+      offersData.forEach((offer: any) => {
+        counts[offer.propertyId] = (counts[offer.propertyId] || 0) + 1;
+      });
+      
+      setProperties(propertiesData);
+      setOfferCounts(counts);
       setLoading(false);
     };
-    fetchProperties();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -40,7 +57,11 @@ export default function HomePage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {properties.map((property: any) => (
-          <PropertyCard key={property.id} property={property} />
+          <PropertyCard 
+            key={property.id} 
+            property={property} 
+            offerCount={offerCounts[property.id] || 0}
+          />
         ))}
       </div>
     </div>

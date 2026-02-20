@@ -86,23 +86,25 @@ export default function PropertyDetailPage({
 
   useEffect(() => {
     const fetchData = async () => {
-      const propertyRes = await fetch(
-        `${API_URL}/api/properties/${params.id}`
-      );
-      const propertyData = await propertyRes.json();
+      // Fetch property and offers in parallel
+      const [propertyRes, offersRes] = await Promise.all([
+        fetch(`${API_URL}/api/properties/${params.id}`),
+        fetch(`${API_URL}/api/offers?propertyId=${params.id}`)
+      ]);
+      
+      const [propertyData, offersData] = await Promise.all([
+        propertyRes.json(),
+        offersRes.json()
+      ]);
+      
       setProperty(propertyData);
-      setLoadingProperty(false);
-
-      const offersRes = await fetch(
-        `${API_URL}/api/offers?propertyId=${params.id}`
-      );
-      const offersData = await offersRes.json();
       setOffers(offersData);
+      setLoadingProperty(false);
       setLoadingOffers(false);
     };
 
     fetchData();
-  }, []);
+  }, [params.id]);
 
   if (loadingProperty) {
     return (
