@@ -81,6 +81,35 @@ The application will be available at [http://localhost:3000](http://localhost:30
 - `npm run build` — Build for production
 - `npm run start` — Run production server
 - `npm run lint` — Run ESLint code quality checks
+- `npm test` — Run test suite
+- `npm run test:watch` — Run tests in watch mode
+- `npm run test:coverage` — Generate coverage report
+- `npm run test:ci` — Run tests for CI/CD pipeline
+
+## Testing
+
+This project includes a comprehensive test suite with **154 tests** achieving **93.39% code coverage**.
+
+### Quick Start
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode (for development)
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### Test Coverage
+
+- **Unit Tests:** All API routes, components, and data structures
+- **Integration Tests:** Full user journeys from browsing to viewing property details
+- **Coverage:** 93.39% statements, 96.29% functions
+
+See [TEST_README.md](./TEST_README.md) for detailed testing documentation.
 
 ## Notes
 
@@ -89,11 +118,12 @@ This is a prototype implementation. The data is currently mocked in `src/data/mo
 ## Activity Log
 model used throughout test - Sonnet 4.5 in vscode copilot
 ### Initial 
-I ran the commands to start the app - noting the 15 high vulnerabilities reported from the node packages installed. 
+I ran the commands to start the app - noting the 15 high vulnerabilities reported from the node packages installed. Ran npm audit to try resolve the vulnerabilities where upgrade won't conflict. This has now increased the high severity vulnerabilities from 15 to 32 lmao. Probably not a simple fix so reverting.
 I have opened the network tab and noted what appears to be a separate fetch request for every property card retrieved on the landing page.
 
 ### Phase 1 
-1. Asked copilot to read this README and understand the repo, and then generate an instructions.md to provide context to the chats. No changes made to instructions. 
+1. Asked copilot to read this README and understand the repo, and then generate an instructions.md to provide context to the chats. No changes made to instructions but it did not put the file in the right place for copilot. I should have been more specific about the instructions to create. Moved manually. 
+
 With agent in planning mode: 
 Started with this prompt "The app is sluggish. You'll find requests that could be parallelised. Identify the root cause and fix it."
 To reduce API calls I've told it to use the offer count from the metadata in the API request that property card makes, instead of making a separate request and told it to parallelize all fetches.
@@ -140,3 +170,8 @@ Please tighten the type declarations throughout this project and update the tsco
 
 All initial changes seem reasonable - removes usage of the 'any' type and declare strict types, new interface types or union types where only specific string values are allowed to be even stricter than the 'String' type. Changes make to
 ts.congif also seem reasonable.
+
+Project no longer builds (Didn't check beforehand actually) due to a type issue which AI has resolved. 
+
+./src/app/api/contacts/route.ts:9:56
+Type error: Property 'propertyId' does not exist on type 'Contact'.
