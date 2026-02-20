@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import PropertyCard from "./components/PropertyCard";
 
-const API_URL = "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export default function HomePage() {
   const [properties, setProperties] = useState<any>([]);
